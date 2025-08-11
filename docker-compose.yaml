@@ -1,0 +1,9 @@
+services:
+  backend:
+    image: nodejs-backend
+    container_name: library-management-system-backend
+    build: .
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./src:/app/src
