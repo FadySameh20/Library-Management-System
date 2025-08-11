@@ -1,0 +1,20 @@
+{
+  "name": "library-management-system",
+  "version": "1.0.0",
+  "description": "A simple library management system to manage books and borrowers.",
+  "homepage": "https://github.com/FadySameh20/Library-Management-System#readme",
+  "bugs": {
+    "url": "https://github.com/FadySameh20/Library-Management-System/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/FadySameh20/Library-Management-System.git"
+  },
+  "license": "ISC",
+  "author": "Fady Sameh",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  }
+}
