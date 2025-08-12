@@ -21,6 +21,7 @@ model Book {
   isbn          String          @unique
   quantity      Int
   shelfLocation String?
+  bookBorrowerers BookBorrower[]
 }
 
 model Borrower {
@@ -28,4 +29,16 @@ model Borrower {
   name          String
   email         String          @unique
   registeredDate DateTime       @default(now())
+  bookBorrowers BookBorrower[]
+}
+
+model BookBorrower {
+  id           Int       @id @default(autoincrement())
+  borrower     Borrower  @relation(fields: [borrowerId], references: [id], onDelete: Cascade)
+  borrowerId   Int
+  book         Book      @relation(fields: [bookId], references: [id], onDelete: Cascade)
+  bookId       Int
+  checkoutDate DateTime  @default(now())
+  dueDate      DateTime
+  returnDate   DateTime?
 }
