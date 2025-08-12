@@ -22,3 +22,10 @@ model Book {
   quantity      Int
   shelfLocation String?
 }
+
+model Borrower {
+  id            Int             @id @default(autoincrement())
+  name          String
+  email         String          @unique
+  registeredDate DateTime       @default(now())
+}
