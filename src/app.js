@@ -1,6 +1,7 @@
 import express from "express";
 import bookRoutes from "./routes/books.routes.js";
 import borrowerRoutes from "./routes/borrowers.routes.js";
+import borrowingsRoutes from "./routes/borrowings.routes.js";
 import { errorMiddleware } from "./exceptions/errorMiddleware.js";
 
 const app = express();
@@ -15,6 +16,7 @@ app.get("/", (req, res) => {
 
 app.use("/api/books", bookRoutes);
 app.use("/api/borrowers", borrowerRoutes);
+app.use("/api/borrowings", borrowingsRoutes);
 
 // Centralized error handler (must be last)
 app.use(errorMiddleware);

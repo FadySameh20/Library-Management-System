@@ -40,4 +40,10 @@ export const deleteBorrower = async (id) => {
   return await prisma.borrower.delete({ where: { id } });
 };
 
-
+export const getBorrowerActiveLoans = async (borrowerId) => {
+  return await prisma.bookBorrower.findMany({
+    where: { borrowerId, returnDate: null },
+    orderBy: { dueDate: "asc" },
+    include: { book: true },
+  });
+};

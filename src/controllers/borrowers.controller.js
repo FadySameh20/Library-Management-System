@@ -49,4 +49,14 @@ export const deleteBorrower = asyncHandler(async (req, res) => {
   res.status(204).send();
 });
 
+export const getBorrowerActiveLoans = asyncHandler(async (req, res) => {
+  const id = Number(req.params.id);
+  console.log(`GET /api/borrowers/${id}/loans/active`);
 
+  if (!Number.isInteger(id)) {
+    throw new BadRequestError("Invalid borrower id");
+  }
+
+  const loans = await borrowersService.getBorrowerActiveLoans(id);
+  res.json(loans);
+});
