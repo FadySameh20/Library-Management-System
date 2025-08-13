@@ -22,6 +22,9 @@ model Book {
   quantity      Int
   shelfLocation String?
   bookBorrowerers BookBorrower[]
+
+  @@index([title])
+  @@index([author])
 }
 
 model Borrower {
@@ -30,6 +33,9 @@ model Borrower {
   email         String          @unique
   registeredDate DateTime       @default(now())
   bookBorrowers BookBorrower[]
+
+  @@index([name])
+  @@index([email])
 }
 
 model BookBorrower {
@@ -41,4 +47,6 @@ model BookBorrower {
   checkoutDate DateTime  @default(now())
   dueDate      DateTime
   returnDate   DateTime?
+
+  @@index([dueDate, returnDate])
 }
