@@ -59,5 +59,5 @@ A simple Node.js/Express application to manage books and borrowers. It supports 
     docker compose up --build
     ```
 
-4) The backend will be available at `http://localhost:3000`.
-    - API docs (Swagger UI): `http://localhost:3000/api-docs`
+4) The backend will be available at [http://localhost:3000](http://localhost:3000)
+    - API docs (Swagger UI): [http://localhost:3000/api-docs](http://localhost:3000/api-docs)

@@ -12,8 +12,8 @@ const app = express();
 app.use(express.json());
 
 // Routes
-app.get("/", (req, res) => {
-  res.send("Home Page");
+app.get("/", (_req, res) => {
+  res.send("Library Management System");
 });
 
 // Swagger
