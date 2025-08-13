@@ -1,6 +1,12 @@
 import * as booksService from "../services/books.service.js";
-import { asyncHandler } from "../exceptions/asyncHandler.js";
+import { asyncHandler } from "../utils/asyncHandler.js";
 import { BadRequestError } from "../exceptions/httpErrors.js";
+import {
+  requireFields,
+  isNegativeInteger,
+  validateId,
+  isEmpty,
+} from "../utils/validators.js";
 
 export const listBooks = asyncHandler(async (req, res) => {
   console.log("GET /api/books");
@@ -19,12 +25,10 @@ export const createBook = asyncHandler(async (req, res) => {
 
   const { title, author, isbn, quantity, shelfLocation } = req.body;
 
-  if (!title || !author || !isbn || quantity === undefined) {
-    throw new BadRequestError("Missing required fields: title, author, isbn, quantity");
-  }
-
-  if (typeof quantity !== "number" || !Number.isInteger(quantity) || quantity < 0) {
-    throw new BadRequestError("quantity must be a non-negative integer");
+  requireFields(req.body, ["title", "author", "isbn", "quantity"]);
+  
+  if(isNegativeInteger(quantity)) {
+    throwNegativeQuantityError();
   }
 
   const created = await booksService.createBook({
@@ -40,17 +44,12 @@ export const createBook = asyncHandler(async (req, res) => {
 export const updateBook = asyncHandler(async (req, res) => {
   const id = Number(req.params.id);
   console.log(`PUT /api/books/${id}`);
-
-  if (!Number.isInteger(id)) {
-    throw new BadRequestError("Invalid id");
-  }
-
+  
+  validateId(id);
   const { title, author, isbn, quantity, shelfLocation } = req.body;
 
-  if (quantity !== undefined) {
-    if (typeof quantity !== "number" || !Number.isInteger(quantity) || quantity < 0) {
-      throw new BadRequestError("quantity must be a non-negative integer");
-    }
+  if (!isEmpty(quantity) && isNegativeInteger(quantity)) {
+    throwNegativeQuantityError();
   }
 
   const updated = await booksService.updateBook(id, {
@@ -66,11 +65,14 @@ export const updateBook = asyncHandler(async (req, res) => {
 export const deleteBook = asyncHandler(async (req, res) => {
   const id = Number(req.params.id);
   console.log(`DELETE /api/books/${id}`);
-
-  if (!Number.isInteger(id)) {
-    throw new BadRequestError("Invalid id");
-  }
+  
+  validateId(id);
 
   await booksService.deleteBook(id);
   res.status(204).send();
 });
+
+
+const throwNegativeQuantityError = () => {
+  throw new BadRequestError(`Quantity must be greater than or equal to 0.`); 
+}

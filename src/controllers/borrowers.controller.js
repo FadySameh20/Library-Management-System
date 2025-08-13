@@ -1,6 +1,6 @@
 import * as borrowersService from "../services/borrowers.service.js";
-import { asyncHandler } from "../exceptions/asyncHandler.js";
-import { BadRequestError } from "../exceptions/httpErrors.js";
+import { asyncHandler } from "../utils/asyncHandler.js";
+import { requireFields, validateId } from "../utils/validators.js";
 
 export const listBorrowers = asyncHandler(async (req, res) => {
   console.log("GET /api/borrowers");
@@ -14,10 +14,7 @@ export const createBorrower = asyncHandler(async (req, res) => {
   console.log("POST /api/borrowers");
 
   const { name, email } = req.body;
-
-  if (!name || !email) {
-    throw new BadRequestError("Missing required fields: name, email");
-  }
+  requireFields(req.body, ["name", "email"]);
 
   const created = await borrowersService.createBorrower({ name, email });
   res.status(201).json(created);
@@ -27,12 +24,9 @@ export const updateBorrower = asyncHandler(async (req, res) => {
   const id = Number(req.params.id);
   console.log(`PUT /api/borrowers/${id}`);
 
-  if (!Number.isInteger(id)) {
-    throw new BadRequestError("Invalid id");
-  }
-
+  validateId(id);
   const { name, email } = req.body;
-
+  
   const updated = await borrowersService.updateBorrower(id, { name, email });
   res.json(updated);
 });
@@ -41,9 +35,7 @@ export const deleteBorrower = asyncHandler(async (req, res) => {
   const id = Number(req.params.id);
   console.log(`DELETE /api/borrowers/${id}`);
 
-  if (!Number.isInteger(id)) {
-    throw new BadRequestError("Invalid id");
-  }
+  validateId(id);
 
   await borrowersService.deleteBorrower(id);
   res.status(204).send();
@@ -53,9 +45,7 @@ export const getBorrowerActiveLoans = asyncHandler(async (req, res) => {
   const id = Number(req.params.id);
   console.log(`GET /api/borrowers/${id}/loans/active`);
 
-  if (!Number.isInteger(id)) {
-    throw new BadRequestError("Invalid borrower id");
-  }
+  validateId(id);
 
   const loans = await borrowersService.getBorrowerActiveLoans(id);
   res.json(loans);

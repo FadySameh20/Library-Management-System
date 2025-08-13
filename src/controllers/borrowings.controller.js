@@ -1,29 +1,27 @@
 import * as borrowingsService from "../services/borrowings.service.js";
-import { asyncHandler } from "../exceptions/asyncHandler.js";
+import { asyncHandler } from "../utils/asyncHandler.js";
+import {
+  validateId,
+  isEmpty,
+  isPositiveInteger,
+} from "../utils/validators.js";
 import { BadRequestError } from "../exceptions/httpErrors.js";
 
 export const checkoutBook = asyncHandler(async (req, res) => {
   const { borrowerId, bookId, days } = req.body;
   console.log(`POST /api/borrowings/checkoutBook`);
 
-  if (!Number.isInteger(borrowerId)) {
-    throw new BadRequestError("Invalid borrower id");
-  }
-  
-  if (!bookId || !Number.isInteger(Number(bookId))) {
-    throw new BadRequestError("Missing or invalid field: bookId");
-  }
-  if (days !== undefined) {
-    const numDays = Number(days);
-    if (!Number.isInteger(numDays) || numDays <= 0) {
-      throw new BadRequestError("days must be a positive integer when provided");
-    }
+  validateId(borrowerId, "Borrower ID");
+  validateId(bookId, "Book ID");
+
+  if(!isEmpty(days) && !isPositiveInteger(days)) {
+    throw new BadRequestError(`Loan days must be a positive integer.`)
   }
 
   const loan = await borrowingsService.checkoutBookForBorrower(
     borrowerId,
-    Number(bookId),
-    days !== undefined ? Number(days) : undefined
+    bookId,
+    days
   );
   res.status(201).json(loan);
 });
@@ -32,17 +30,12 @@ export const returnBook = asyncHandler(async (req, res) => {
   const { borrowerId, bookId } = req.body;
   console.log(`POST /api/borrowings/returnBook`);
 
-  if (!Number.isInteger(borrowerId)) {
-    throw new BadRequestError("Invalid borrower id");
-  }
-
-  if (!bookId || !Number.isInteger(Number(bookId))) {
-    throw new BadRequestError("Missing or invalid field: bookId");
-  }
+  validateId(borrowerId, "Borrower ID");
+  validateId(bookId, "Book ID");
 
   const loan = await borrowingsService.returnBookForBorrower(
     borrowerId,
-    Number(bookId)
+    bookId
   );
   res.json(loan);
 });
