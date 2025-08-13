@@ -61,3 +61,6 @@ A simple Node.js/Express application to manage books and borrowers. It supports 
 
 4) The backend will be available at [http://localhost:3000](http://localhost:3000)
     - API docs (Swagger UI): [http://localhost:3000/api-docs](http://localhost:3000/api-docs)
+  
+### Database Schema Diagram
+  <img width="536" height="511" alt="db_schema_diagram" src="https://github.com/user-attachments/assets/f1574242-d84b-48b7-b7f8-85981f346e61" />
