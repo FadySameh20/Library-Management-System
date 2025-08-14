@@ -56,7 +56,7 @@ A simple library management system to manage books and borrowers. It supports ad
         - `POSTGRES_DB`: Database name
         - `POSTGRES_USER`: Database name
         - `POSTGRES_PASSWORD`: Database name
-        - `DATABASE_URL`: Database connection string for Prisma **(already set, no changes needed)**
+        - `DATABASE_URL`: Database connection string for Prisma **(already set, no changes needed)** --> Format: `PROTOCOL://USER:PASSWORD@HOST:PORT/DATABASE`
 
 3) Start the docker container with docker compose
     ```bash
