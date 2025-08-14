@@ -24,7 +24,10 @@ export const checkoutBook = asyncHandler(async (req, res) => {
     bookId,
     days
   );
-  res.status(201).json(loan);
+  res.status(201).json({
+    message: "Book checked out successfully",
+    data: loan,
+  });
 });
 
 export const returnBook = asyncHandler(async (req, res) => {
@@ -38,7 +41,10 @@ export const returnBook = asyncHandler(async (req, res) => {
     borrowerId,
     bookId
   );
-  res.json(loan);
+  res.json({
+    message: "Book returned successfully",
+    data: loan,
+  });
 });
 
 export const listOverdueLoans = asyncHandler(async (req, res) => {

@@ -84,7 +84,10 @@ describe("Books CRUD operations", () => {
       .put("/api/books/1")
       .send({ title: "Updated" });
     expect(res.status).toBe(200);
-    expect(res.body).toEqual({ id: 1, title: "Updated" });
+    expect(res.body).toEqual({
+      message: "Book updated successfully",
+      data: { id: 1, title: "Updated" },
+    });
   });
 
   it("PUT /api/books/:id returns 404 if book is not found", async () => {
@@ -102,11 +105,14 @@ describe("Books CRUD operations", () => {
     expect(res.body.error).toMatch(/Invalid ID/);
   });
 
-  it("DELETE /api/books/:id returns 204 on success", async () => {
-    services.deleteBook.mockResolvedValue(undefined);
+  it("DELETE /api/books/:id returns 200 with message and data on success", async () => {
+    services.deleteBook.mockResolvedValue({ id: 2 });
     const res = await request(app).delete("/api/books/2");
-    expect(res.status).toBe(204);
-    expect(res.text).toBe("");
+    expect(res.status).toBe(200);
+    expect(res.body).toEqual({
+      message: "Book deleted successfully",
+      data: { id: 2 },
+    });
   });
 
   it("DELETE /api/books/:id returns 404 if books is not found", async () => {

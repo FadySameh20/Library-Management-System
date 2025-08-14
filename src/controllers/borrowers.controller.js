@@ -22,7 +22,10 @@ export const createBorrower = asyncHandler(async (req, res) => {
   requireFields(req.body, ["name", "email"]);
 
   const created = await borrowersService.createBorrower({ name, email });
-  res.status(201).json(created);
+  res.status(201).json({
+    message: "Borrower created successfully",
+    data: created,
+  });
 });
 
 export const updateBorrower = asyncHandler(async (req, res) => {
@@ -33,7 +36,10 @@ export const updateBorrower = asyncHandler(async (req, res) => {
   const { name, email } = req.body;
   
   const updated = await borrowersService.updateBorrower(id, { name, email });
-  res.json(updated);
+  res.json({
+    message: "Borrower updated successfully",
+    data: updated,
+  });
 });
 
 export const deleteBorrower = asyncHandler(async (req, res) => {
@@ -42,8 +48,11 @@ export const deleteBorrower = asyncHandler(async (req, res) => {
 
   validateId(id);
 
-  await borrowersService.deleteBorrower(id);
-  res.status(204).send();
+  const deleted = await borrowersService.deleteBorrower(id);
+  res.status(200).json({
+    message: "Borrower deleted successfully",
+    data: deleted,
+  });
 });
 
 export const getBorrowerActiveLoans = asyncHandler(async (req, res) => {

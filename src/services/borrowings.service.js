@@ -16,11 +16,11 @@ export const checkoutBookForBorrower = async (
       throw new HttpError(404, "Borrower not found");
     }
 
-    const dec = await tx.book.updateMany({
+    const updatedRows = await tx.book.updateMany({
       where: { id: bookId, quantity: { gt: 0 } },
       data: { quantity: { decrement: 1 } },
     });
-    if (dec.count === 0) {
+    if (updatedRows.count === 0) {
       throw new BadRequestError("Book not available or does not exist");
     }
 
@@ -42,16 +42,16 @@ export const returnBookForBorrower = async (borrowerId, bookId) => {
   const returnDate = new Date();
 
   return await prisma.$transaction(async (tx) => {
-    const active = await tx.bookBorrower.findFirst({
+    const activeLoan = await tx.bookBorrower.findFirst({
       where: { borrowerId, bookId, returnDate: null },
     });
 
-    if (!active) {
+    if (!activeLoan) {
       throw new BadRequestError("No active loan found for this borrower and book");
     }
 
     const updatedLoan = await tx.bookBorrower.update({
-      where: { id: active.id },
+      where: { id: activeLoan.id },
       data: { returnDate },
       include: { book: true },
     });

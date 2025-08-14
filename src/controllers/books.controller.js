@@ -39,7 +39,10 @@ export const createBook = asyncHandler(async (req, res) => {
     quantity,
     shelfLocation,
   });
-  res.status(201).json(created);
+  res.status(201).json({
+    message: "Book created successfully",
+    data: created,
+  });
 });
 
 export const updateBook = asyncHandler(async (req, res) => {
@@ -60,7 +63,10 @@ export const updateBook = asyncHandler(async (req, res) => {
     quantity,
     shelfLocation,
   });
-  res.json(updated);
+  res.json({
+    message: "Book updated successfully",
+    data: updated,
+  });
 });
 
 export const deleteBook = asyncHandler(async (req, res) => {
@@ -69,8 +75,11 @@ export const deleteBook = asyncHandler(async (req, res) => {
   
   validateId(id);
 
-  await booksService.deleteBook(id);
-  res.status(204).send();
+  const deleted = await booksService.deleteBook(id);
+  res.status(200).json({
+    message: "Book deleted successfully",
+    data: deleted,
+  });
 });
 
 

@@ -5,7 +5,7 @@ const prismaKnownRequestErrorCodeToStatus = {
   P2025: 404, // Record not found
 };
 
-export const errorMiddleware = (err, req, res, next) => {
+export const errorMiddleware = (err, _req, res, next) => {
   if (res.headersSent) return next(err);
 
   // Map Prisma known errors to HttpError-like response

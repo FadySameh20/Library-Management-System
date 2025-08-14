@@ -73,7 +73,18 @@ const openapi = {
         responses: {
           201: {
             description: "Created book",
-            content: { "application/json": { schema: { $ref: "#/components/schemas/Book" } } },
+            content: {
+              "application/json": {
+                schema: {
+                  type: "object",
+                  required: ["message", "data"],
+                  properties: {
+                    message: { type: "string", example: "Book created successfully" },
+                    data: { $ref: "#/components/schemas/Book" },
+                  },
+                },
+              },
+            },
           },
           400: { $ref: "#/components/responses/BadRequest" },
           409: { $ref: "#/components/responses/Conflict" },
@@ -106,7 +117,21 @@ const openapi = {
           },
         },
         responses: {
-          200: { description: "Updated book", content: { "application/json": { schema: { $ref: "#/components/schemas/Book" } } } },
+          200: {
+            description: "Updated book",
+            content: {
+              "application/json": {
+                schema: {
+                  type: "object",
+                  required: ["message", "data"],
+                  properties: {
+                    message: { type: "string", example: "Book updated successfully" },
+                    data: { $ref: "#/components/schemas/Book" },
+                  },
+                },
+              },
+            },
+          },
           400: { $ref: "#/components/responses/BadRequest" },
           404: { $ref: "#/components/responses/NotFound" },
           409: { $ref: "#/components/responses/Conflict" },
@@ -120,7 +145,21 @@ const openapi = {
           { in: "path", name: "id", required: true, schema: { type: "integer" } },
         ],
         responses: {
-          204: { description: "Deleted" },
+          200: {
+            description: "Deleted book",
+            content: {
+              "application/json": {
+                schema: {
+                  type: "object",
+                  required: ["message", "data"],
+                  properties: {
+                    message: { type: "string", example: "Book deleted successfully" },
+                    data: { $ref: "#/components/schemas/Book" },
+                  },
+                },
+              },
+            },
+          },
           400: { $ref: "#/components/responses/BadRequest" },
           404: { $ref: "#/components/responses/NotFound" },
           500: { $ref: "#/components/responses/InternalServerError" },
@@ -175,7 +214,21 @@ const openapi = {
           },
         },
         responses: {
-          201: { description: "Created borrower", content: { "application/json": { schema: { $ref: "#/components/schemas/Borrower" } } } },
+          201: {
+            description: "Created borrower",
+            content: {
+              "application/json": {
+                schema: {
+                  type: "object",
+                  required: ["message", "data"],
+                  properties: {
+                    message: { type: "string", example: "Borrower created successfully" },
+                    data: { $ref: "#/components/schemas/Borrower" },
+                  },
+                },
+              },
+            },
+          },
           400: { $ref: "#/components/responses/BadRequest" },
           409: { $ref: "#/components/responses/Conflict" },
           500: { $ref: "#/components/responses/InternalServerError" },
@@ -202,7 +255,21 @@ const openapi = {
           },
         },
         responses: {
-          200: { description: "Updated borrower", content: { "application/json": { schema: { $ref: "#/components/schemas/Borrower" } } } },
+          200: {
+            description: "Updated borrower",
+            content: {
+              "application/json": {
+                schema: {
+                  type: "object",
+                  required: ["message", "data"],
+                  properties: {
+                    message: { type: "string", example: "Borrower updated successfully" },
+                    data: { $ref: "#/components/schemas/Borrower" },
+                  },
+                },
+              },
+            },
+          },
           400: { $ref: "#/components/responses/BadRequest" },
           404: { $ref: "#/components/responses/NotFound" },
           409: { $ref: "#/components/responses/Conflict" },
@@ -214,7 +281,21 @@ const openapi = {
         summary: "Delete a borrower",
         parameters: [ { in: "path", name: "id", required: true, schema: { type: "integer" } } ],
         responses: {
-          204: { description: "Deleted" },
+          200: {
+            description: "Deleted borrower",
+            content: {
+              "application/json": {
+                schema: {
+                  type: "object",
+                  required: ["message", "data"],
+                  properties: {
+                    message: { type: "string", example: "Borrower deleted successfully" },
+                    data: { $ref: "#/components/schemas/Borrower" },
+                  },
+                },
+              },
+            },
+          },
           400: { $ref: "#/components/responses/BadRequest" },
           404: { $ref: "#/components/responses/NotFound" },
           500: { $ref: "#/components/responses/InternalServerError" },
@@ -254,7 +335,21 @@ const openapi = {
           },
         },
         responses: {
-          201: { description: "Created loan", content: { "application/json": { schema: { $ref: "#/components/schemas/LoanWithBook" } } } },
+          201: {
+            description: "Created loan",
+            content: {
+              "application/json": {
+                schema: {
+                  type: "object",
+                  required: ["message", "data"],
+                  properties: {
+                    message: { type: "string", example: "Book checked out successfully" },
+                    data: { $ref: "#/components/schemas/LoanWithBook" },
+                  },
+                },
+              },
+            },
+          },
           400: { $ref: "#/components/responses/BadRequest" },
           404: { $ref: "#/components/responses/NotFound" },
           500: { $ref: "#/components/responses/InternalServerError" },
@@ -281,7 +376,21 @@ const openapi = {
           },
         },
         responses: {
-          200: { description: "Updated loan", content: { "application/json": { schema: { $ref: "#/components/schemas/LoanWithBook" } } } },
+          200: {
+            description: "Updated loan",
+            content: {
+              "application/json": {
+                schema: {
+                  type: "object",
+                  required: ["message", "data"],
+                  properties: {
+                    message: { type: "string", example: "Book returned successfully" },
+                    data: { $ref: "#/components/schemas/LoanWithBook" },
+                  },
+                },
+              },
+            },
+          },
           400: { $ref: "#/components/responses/BadRequest" },
           500: { $ref: "#/components/responses/InternalServerError" },
         },
