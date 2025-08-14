@@ -306,9 +306,27 @@ const openapi = {
       get: {
         tags: ["Borrowers"],
         summary: "List active loans for a borrower",
-        parameters: [ { in: "path", name: "id", required: true, schema: { type: "integer" } } ],
+        parameters: [
+          { in: "path", name: "id", required: true, schema: { type: "integer" } },
+          { in: "query", name: "page", schema: { type: "integer", minimum: 1, default: 1 }, description: "Page number (1-based)" },
+          { in: "query", name: "pageSize", schema: { type: "integer", minimum: 1, default: 10 }, description: "Items per page" },
+        ],
         responses: {
-          200: { description: "Array of active loans", content: { "application/json": { schema: { type: "array", items: { $ref: "#/components/schemas/LoanWithBook" } } } } },
+          200: {
+            description: "Paginated list of active loans",
+            content: {
+              "application/json": {
+                schema: {
+                  type: "object",
+                  required: ["data", "meta"],
+                  properties: {
+                    data: { type: "array", items: { $ref: "#/components/schemas/LoanWithBook" } },
+                    meta: { $ref: "#/components/schemas/PaginationMeta" },
+                  },
+                },
+              },
+            },
+          },
           400: { $ref: "#/components/responses/BadRequest" },
           500: { $ref: "#/components/responses/InternalServerError" },
         },

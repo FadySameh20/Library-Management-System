@@ -58,10 +58,27 @@ export const deleteBorrower = async (id) => {
   return await prisma.borrower.delete({ where: { id } });
 };
 
-export const getBorrowerActiveLoans = async (borrowerId) => {
-  return await prisma.bookBorrower.findMany({
-    where: { borrowerId, returnDate: null },
+export const getBorrowerActiveLoans = async (borrowerId, pagination = {}) => {
+  const { page, pageSize } = pagination;
+
+  const where = { borrowerId, returnDate: null };
+
+  const total = await prisma.bookBorrower.count({ where });
+  const data = await prisma.bookBorrower.findMany({
+    where,
     orderBy: { dueDate: "asc" },
     include: { book: true },
+    skip: (page - 1) * pageSize,
+    take: pageSize,
   });
+
+  return {
+    data,
+    meta: {
+      total,
+      page,
+      pageSize,
+      totalPages: getTotalPages(total, pageSize),
+    },
+  };
 };

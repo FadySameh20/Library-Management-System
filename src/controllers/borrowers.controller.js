@@ -61,6 +61,6 @@ export const getBorrowerActiveLoans = asyncHandler(async (req, res) => {
 
   validateId(id);
 
-  const loans = await borrowersService.getBorrowerActiveLoans(id);
+  const loans = await borrowersService.getBorrowerActiveLoans(id, getPageInfo(req));
   res.json(loans);
 });
