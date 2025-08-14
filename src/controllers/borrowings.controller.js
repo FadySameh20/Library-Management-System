@@ -6,6 +6,7 @@ import {
   isPositiveInteger,
 } from "../utils/validators.js";
 import { BadRequestError } from "../exceptions/httpErrors.js";
+import { getPageInfo } from "../utils/pageHandler.js";
 
 export const checkoutBook = asyncHandler(async (req, res) => {
   const { borrowerId, bookId, days } = req.body;
@@ -40,8 +41,8 @@ export const returnBook = asyncHandler(async (req, res) => {
   res.json(loan);
 });
 
-export const listOverdueLoans = asyncHandler(async (_req, res) => {
+export const listOverdueLoans = asyncHandler(async (req, res) => {
   console.log("GET /api/borrowings/overdue");
-  const loans = await borrowingsService.getOverdueLoans();
+  const loans = await borrowingsService.getOverdueLoans(getPageInfo(req));
   res.json(loans);
 });

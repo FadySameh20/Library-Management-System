@@ -22,18 +22,27 @@ const openapi = {
       get: {
         tags: ["Books"],
         summary: "List books",
-        description: "List all books with optional search filters.",
+        description: "List all books with optional search filters and pagination.",
         parameters: [
           { in: "query", name: "title", schema: { type: "string" }, description: "Filter by title (contains, case-insensitive)" },
           { in: "query", name: "author", schema: { type: "string" }, description: "Filter by author (contains, case-insensitive)" },
           { in: "query", name: "isbn", schema: { type: "string" }, description: "Filter by ISBN (contains, case-insensitive)" },
+          { in: "query", name: "page", schema: { type: "integer", minimum: 1, default: 1 }, description: "Page number (1-based)" },
+          { in: "query", name: "pageSize", schema: { type: "integer", minimum: 1, default: 10 }, description: "Items per page" },
         ],
         responses: {
           200: {
-            description: "Array of books",
+            description: "Paginated list of books",
             content: {
               "application/json": {
-                schema: { type: "array", items: { $ref: "#/components/schemas/Book" } },
+                schema: {
+                  type: "object",
+                  required: ["data", "meta"],
+                  properties: {
+                    data: { type: "array", items: { $ref: "#/components/schemas/Book" } },
+                    meta: { $ref: "#/components/schemas/PaginationMeta" },
+                  },
+                },
               },
             },
           },
@@ -125,9 +134,25 @@ const openapi = {
         parameters: [
           { in: "query", name: "name", schema: { type: "string" }, description: "Filter by name (contains, case-insensitive)" },
           { in: "query", name: "email", schema: { type: "string" }, description: "Filter by email (contains, case-insensitive)" },
+          { in: "query", name: "page", schema: { type: "integer", minimum: 1, default: 1 }, description: "Page number (1-based)" },
+          { in: "query", name: "pageSize", schema: { type: "integer", minimum: 1, default: 10 }, description: "Items per page" },
         ],
         responses: {
-          200: { description: "Array of borrowers", content: { "application/json": { schema: { type: "array", items: { $ref: "#/components/schemas/Borrower" } } } } },
+          200: {
+            description: "Paginated list of borrowers",
+            content: {
+              "application/json": {
+                schema: {
+                  type: "object",
+                  required: ["data", "meta"],
+                  properties: {
+                    data: { type: "array", items: { $ref: "#/components/schemas/Borrower" } },
+                    meta: { $ref: "#/components/schemas/PaginationMeta" },
+                  },
+                },
+              },
+            },
+          },
           500: { $ref: "#/components/responses/InternalServerError" },
         },
       },
@@ -266,8 +291,26 @@ const openapi = {
       get: {
         tags: ["Borrowings"],
         summary: "List overdue loans",
+        parameters: [
+          { in: "query", name: "page", schema: { type: "integer", minimum: 1, default: 1 }, description: "Page number (1-based)" },
+          { in: "query", name: "pageSize", schema: { type: "integer", minimum: 1, default: 10 }, description: "Items per page" },
+        ],
         responses: {
-          200: { description: "Array of overdue loans", content: { "application/json": { schema: { type: "array", items: { $ref: "#/components/schemas/LoanWithBookAndBorrower" } } } } },
+          200: {
+            description: "Paginated list of overdue loans",
+            content: {
+              "application/json": {
+                schema: {
+                  type: "object",
+                  required: ["data", "meta"],
+                  properties: {
+                    data: { type: "array", items: { $ref: "#/components/schemas/LoanWithBookAndBorrower" } },
+                    meta: { $ref: "#/components/schemas/PaginationMeta" },
+                  },
+                },
+              },
+            },
+          },
           500: { $ref: "#/components/responses/InternalServerError" },
         },
       },
@@ -275,6 +318,16 @@ const openapi = {
   },
   components: {
     schemas: {
+      PaginationMeta: {
+        type: "object",
+        properties: {
+          total: { type: "integer", example: 42 },
+          page: { type: "integer", example: 1 },
+          pageSize: { type: "integer", example: 10 },
+          totalPages: { type: "integer", example: 5 },
+        },
+        required: ["total", "page", "pageSize", "totalPages"],
+      },
       Book: {
         type: "object",
         properties: {

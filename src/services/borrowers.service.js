@@ -1,6 +1,9 @@
 import prisma from "../prisma/client.js";
+import { getTotalPages } from "../utils/pageHandler.js";
 
-export const getAllBorrowers = async (filters = {}) => {
+export const getAllBorrowers = async (filters = {}, pagination = {}) => {
+  const { page, pageSize } = pagination;
+
   const where = Object.fromEntries(
     Object.entries(filters)
       .filter(([_, value]) => value)
@@ -10,9 +13,24 @@ export const getAllBorrowers = async (filters = {}) => {
       ])
   );
 
-  return prisma.borrower.findMany({
-    where: Object.keys(where).length ? { AND: [where] } : undefined,
+  const whereClause = Object.keys(where).length ? { AND: [where] } : undefined;
+
+  const total = await prisma.borrower.count({ where: whereClause });
+  const data = await prisma.borrower.findMany({
+    where: whereClause,
+    skip: (page - 1) * pageSize,
+    take: pageSize,
   });
+
+  return {
+    data,
+    meta: {
+      total,
+      page,
+      pageSize,
+      totalPages: getTotalPages(total, pageSize),
+    },
+  };
 };
 
 export const createBorrower = async (borrowerData) => {

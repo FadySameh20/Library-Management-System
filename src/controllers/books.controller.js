@@ -7,16 +7,17 @@ import {
   validateId,
   isEmpty,
 } from "../utils/validators.js";
+import { getPageInfo } from "../utils/pageHandler.js";
 
 export const listBooks = asyncHandler(async (req, res) => {
   console.log("GET /api/books");
 
   const { title, author, isbn } = req.query;
-  const booksListResponse = await booksService.getAllBooks({
-    title,
-    author,
-    isbn,
-  });
+
+  const booksListResponse = await booksService.getAllBooks(
+    { title, author, isbn },
+    getPageInfo(req),
+  );
   res.json(booksListResponse);
 });
 

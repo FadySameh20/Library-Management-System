@@ -1,12 +1,17 @@
 import * as borrowersService from "../services/borrowers.service.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
+import { getPageInfo } from "../utils/pageHandler.js";
 import { requireFields, validateId } from "../utils/validators.js";
 
 export const listBorrowers = asyncHandler(async (req, res) => {
   console.log("GET /api/borrowers");
 
   const { name, email } = req.query;
-  const borrowers = await borrowersService.getAllBorrowers({ name, email });
+
+  const borrowers = await borrowersService.getAllBorrowers(
+    { name, email },
+    getPageInfo(req),
+  );
   res.json(borrowers);
 });
 

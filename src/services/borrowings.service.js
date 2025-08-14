@@ -1,5 +1,6 @@
 import prisma from "../prisma/client.js";
 import { BadRequestError, HttpError } from "../exceptions/httpErrors.js";
+import { getTotalPages } from "../utils/pageHandler.js";
 
 export const checkoutBookForBorrower = async (
   borrowerId,
@@ -64,11 +65,28 @@ export const returnBookForBorrower = async (borrowerId, bookId) => {
   });
 };
 
-export const getOverdueLoans = async () => {
+export const getOverdueLoans = async (pagination = {}) => {
+  const { page, pageSize } = pagination;
   const now = new Date();
-  return await prisma.bookBorrower.findMany({
-    where: { dueDate: { lt: now }, returnDate: null },
+
+  const where = { dueDate: { lt: now }, returnDate: null };
+
+  const total = await prisma.bookBorrower.count({ where });
+  const data = await prisma.bookBorrower.findMany({
+    where,
     orderBy: { dueDate: "asc" },
     include: { book: true, borrower: true },
+    skip: (page - 1) * pageSize,
+    take: pageSize,
   });
+
+  return {
+    data,
+    meta: {
+      total,
+      page,
+      pageSize,
+      totalPages: getTotalPages(total, pageSize),
+    },
+  };
 };
