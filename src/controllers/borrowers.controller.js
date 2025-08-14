@@ -1,7 +1,9 @@
+import { BadRequestError } from "../exceptions/httpErrors.js";
 import * as borrowersService from "../services/borrowers.service.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 import { getPageInfo } from "../utils/pageHandler.js";
 import { requireFields, validateId } from "../utils/validators.js";
+import validator from 'validator';
 
 export const listBorrowers = asyncHandler(async (req, res) => {
   console.log("GET /api/borrowers");
@@ -20,6 +22,11 @@ export const createBorrower = asyncHandler(async (req, res) => {
 
   const { name, email } = req.body;
   requireFields(req.body, ["name", "email"]);
+
+  if(!validator.isEmail(email)) {
+    throw new BadRequestError("Invalid email");
+  }
+
 
   const created = await borrowersService.createBorrower({ name, email });
   res.status(201).json({
